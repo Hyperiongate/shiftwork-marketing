@@ -866,8 +866,15 @@ Give specific, actionable marketing ideas. Be direct and creative.`,
         const reply = data.content[0].text;
         chatHistory.push({ role: 'assistant', content: reply });
 
-        thinkingMsg.querySelector('.chat-msg-body').className = 'chat-msg-body';
-        thinkingMsg.querySelector('.chat-msg-body').innerHTML = reply.replace(/\n\n/g, '<br><br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        const msgBody = thinkingMsg.querySelector('.chat-msg-body');
+        msgBody.style.animation = 'none';
+        msgBody.style.opacity = '1';
+        msgBody.style.fontFamily = '';
+        msgBody.style.fontSize = '';
+        msgBody.style.textTransform = '';
+        msgBody.style.letterSpacing = '';
+        msgBody.className = 'chat-msg-body';
+        msgBody.innerHTML = reply.replace(/\n\n/g, '<br><br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
       } catch (err) {
         thinkingMsg.querySelector('.chat-msg-body').innerHTML = `<span style="color:#c0392b">Error: ${err.message}</span>`;
