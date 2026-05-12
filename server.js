@@ -40,12 +40,14 @@ const server = http.createServer((req, res) => {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
+      const bodyBuffer = Buffer.from(body, 'utf8');
       const options = {
         hostname: 'api.anthropic.com',
         path: '/v1/messages',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Content-Length': bodyBuffer.length,
           'x-api-key': ANTHROPIC_API_KEY,
           'anthropic-version': '2023-06-01',
         }
