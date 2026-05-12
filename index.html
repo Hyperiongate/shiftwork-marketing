@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shiftwork Solutions — Marketing Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #181818;
+      --surface2: #222222;
+      --border: #2a2a2a;
+      --accent: #c8a96e;
+      --accent2: #7eb8a4;
+      --text: #e8e4dc;
+      --muted: #666;
+      --danger: #c0392b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      font-size: 15px;
+    }
+
+    /* HEADER */
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .header-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent2);
+      display: inline-block;
+      margin-right: 0.5rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      gap: 0;
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      margin-bottom: -1px;
+    }
+
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* MAIN LAYOUT */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* SEARCH PANEL */
+    .search-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--muted); }
+
+    .search-btn {
+      background: var(--accent);
+      color: #0f0f0f;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 3px;
+      font-weight: 500;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { opacity: 0.85; }
+    .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* FILTER CHIPS */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.3rem 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip:hover, .chip.active {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    /* RESULTS */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .results-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+
+    .result-card:hover { border-color: var(--accent2); }
+    .result-card.expanded { border-color: var(--accent); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .card-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+
+    .badge-industry { color: var(--accent2); border-color: var(--accent2); }
+    .badge-timeline { color: var(--accent); border-color: var(--accent); }
+    .badge-type { color: var(--muted); border-color: var(--border); }
+
+    .card-excerpt {
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-detail {
+      background: none;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.4rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+
+    .btn-detail:hover {
+      background: var(--accent);
+      color: #0f0f0f;
+    }
+
+    .btn-dismiss {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.4rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+
+    .btn-dismiss:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* DETAIL PANEL */
+    .detail-panel {
+      background: var(--surface2);
+      border-radius: 3px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #bbb;
+      display: none;
+    }
+
+    .detail-panel.visible { display: block; }
+
+    .detail-panel h4 {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .detail-panel h4:first-child { margin-top: 0; }
+
+    /* LOADING */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      display: none;
+    }
+
+    .loading.visible { display: block; }
+
+    .loading-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    .empty-text {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    /* IDEATION TAB */
+    .ideation-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .chat-history {
+      min-height: 200px;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding-right: 0.5rem;
+    }
+
+    .chat-msg {
+      margin-bottom: 1.25rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-msg-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.35rem;
+    }
+
+    .chat-msg-label.you { color: var(--accent); }
+    .chat-msg-label.ai { color: var(--accent2); }
+
+    .chat-msg-body {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--surface2);
+      padding: 0.75rem 1rem;
+      border-radius: 3px;
+    }
+
+    .chat-msg-body.you {
+      background: #1e1a14;
+      border-left: 2px solid var(--accent);
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      border-radius: 3px;
+      outline: none;
+      resize: none;
+      height: 60px;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus { border-color: var(--accent2); }
+
+    /* TAB CONTENT */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* API KEY WARNING */
+    .api-warning {
+      background: #1a1200;
+      border: 1px solid #3a2800;
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      display: none;
+    }
+
+    .api-warning.visible { display: block; }
+
+    .api-key-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      border-radius: 3px;
+      outline: none;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="header-title">Shiftwork Solutions — Marketing Intelligence</div>
+      <div class="header-sub"><span class="status-dot"></span>Powered by Claude</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted)" id="date-display"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('speaking')">Speaking Engagements</button>
+    <button class="tab" onclick="switchTab('writing')">Writing Opportunities</button>
+    <button class="tab" onclick="switchTab('ideation')">Ideation</button>
+  </div>
+
+  <div class="main">
+
+    <!-- API KEY SECTION -->
+    <div class="api-warning" id="api-warning">
+      ⚠ No API key found. Enter your Anthropic API key to activate intelligence features.
+      <input class="api-key-input" type="password" id="api-key-input" placeholder="sk-ant-..." />
+      <button class="search-btn" style="margin-top:0.5rem" onclick="saveApiKey()">Save Key</button>
+    </div>
+
+    <!-- SPEAKING TAB -->
+    <div class="tab-content active" id="tab-speaking">
+      <div class="search-panel">
+        <div class="panel-label">Search Parameters</div>
+        <div class="search-row">
+          <input class="search-input" id="speaking-query" placeholder="e.g. food manufacturing conference, logistics summit, HR operations retreat..." />
+          <button class="search-btn" onclick="runSearch('speaking')" id="speaking-btn">Find Opportunities</button>
+        </div>
+        <div class="filters">
+          <span class="chip active" data-filter="no-fee">No Speaker Fee</span>
+          <span class="chip active" data-filter="food">Food & Beverage</span>
+          <span class="chip active" data-filter="manufacturing">Manufacturing</span>
+          <span class="chip active" data-filter="logistics">Logistics</span>
+          <span class="chip active" data-filter="automotive">Automotive</span>
+          <span class="chip active" data-filter="pharma">Pharmaceutical</span>
+          <span class="chip active" data-filter="distribution">Distribution</span>
+          <span class="chip active" data-filter="semiconductor">Semiconductor</span>
+          <span class="chip active" data-filter="1-18mo">1–18 Months Out</span>
+        </div>
+      </div>
+
+      <div class="loading" id="speaking-loading">
+        <div class="loading-text">Searching for opportunities...</div>
+      </div>
+
+      <div id="speaking-results"></div>
+    </div>
+
+    <!-- WRITING TAB -->
+    <div class="tab-content" id="tab-writing">
+      <div class="search-panel">
+        <div class="panel-label">Search Parameters</div>
+        <div class="search-row">
+          <input class="search-input" id="writing-query" placeholder="e.g. workforce management, AI in operations, shift scheduling, part-time labor..." />
+          <button class="search-btn" onclick="runSearch('writing')" id="writing-btn">Find Publications</button>
+        </div>
+        <div class="filters">
+          <span class="chip active" data-filter="online">Online Publications</span>
+          <span class="chip active" data-filter="trade">Trade Magazines</span>
+          <span class="chip active" data-filter="500-1500">500–1500 Words</span>
+          <span class="chip active" data-filter="operations">Operations</span>
+          <span class="chip active" data-filter="ai-workforce">AI & Workforce</span>
+          <span class="chip active" data-filter="shift-work">Shift Work</span>
+          <span class="chip active" data-filter="guest-submissions">Accepting Submissions</span>
+        </div>
+      </div>
+
+      <div class="loading" id="writing-loading">
+        <div class="loading-text">Searching for publications...</div>
+      </div>
+
+      <div id="writing-results"></div>
+    </div>
+
+    <!-- IDEATION TAB -->
+    <div class="tab-content" id="tab-ideation">
+      <div class="ideation-panel">
+        <div class="panel-label">Marketing Ideation — Ask Anything</div>
+        <div class="chat-history" id="chat-history">
+          <div class="empty-state" style="padding:2rem 0">
+            <div class="empty-icon">💡</div>
+            <div class="empty-text" style="font-size:0.85rem">Ask about new marketing approaches, outreach ideas, positioning strategies, or anything to grow Shiftwork Solutions.</div>
+          </div>
+        </div>
+        <div class="chat-row">
+          <textarea class="chat-input" id="ideation-input" placeholder="e.g. What industries haven't we targeted yet? How should we position Survey in a Box? What speaking topics would land best with plant managers?"></textarea>
+          <button class="search-btn" onclick="runIdeation()" id="ideation-btn">Ask</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- DATE ----
+    document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    // ---- API KEY ----
+    let API_KEY = localStorage.getItem('anthropic_key') || '';
+
+    function checkApiKey() {
+      if (!API_KEY) {
+        document.getElementById('api-warning').classList.add('visible');
+      }
+    }
+
+    function saveApiKey() {
+      const val = document.getElementById('api-key-input').value.trim();
+      if (val.startsWith('sk-')) {
+        API_KEY = val;
+        localStorage.setItem('anthropic_key', val);
+        document.getElementById('api-warning').classList.remove('visible');
+      } else {
+        alert('Please enter a valid Anthropic API key starting with sk-ant-');
+      }
+    }
+
+    checkApiKey();
+
+    // ---- TABS ----
+    function switchTab(name) {
+      document.querySelectorAll('.tab').forEach((t, i) => {
+        t.classList.toggle('active', ['speaking','writing','ideation'][i] === name);
+      });
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+    }
+
+    // ---- CHIP TOGGLES ----
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('active'));
+    });
+
+    // ---- CLAUDE API CALL ----
+    async function callClaude(systemPrompt, userMessage) {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-calls': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userMessage }]
+        })
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+      return data.content[0].text;
+    }
+
+    // ---- SEARCH ----
+    async function runSearch(type) {
+      if (!API_KEY) { checkApiKey(); return; }
+
+      const isSpeaking = type === 'speaking';
+      const queryEl = document.getElementById(type + '-query');
+      const loadingEl = document.getElementById(type + '-loading');
+      const resultsEl = document.getElementById(type + '-results');
+      const btnEl = document.getElementById(type + '-btn');
+
+      const query = queryEl.value.trim();
+      loadingEl.classList.add('visible');
+      resultsEl.innerHTML = '';
+      btnEl.disabled = true;
+
+      const systemPrompt = isSpeaking
+        ? `You are a research assistant finding speaking engagement opportunities for James Dillingham, founder of Shiftwork Solutions. He is an expert in shift work scheduling, workforce management, part-time labor optimization, and AI integration in operations. He has 35 years of experience.
+
+He is looking for events where he can speak. Criteria:
+- Industries: food & beverage, distribution, logistics, manufacturing, automotive, pharmaceutical, semiconductor, operations
+- Audience: HR managers, operations managers, plant managers, general managers, continuous improvement managers, C-level at facility level
+- Event types: company retreats, small expos, roundtables, trade show side rooms, webinars, industry association events
+- Audience size: 25 or more (no upper limit)
+- Timeline: 1 to 18 months from today (May 2026)
+- Speaker fees: prefers not to pay; travel reimbursement preferred but not required
+- He does NOT want to pay $10,000–$20,000 for a keynote slot
+
+Find 5 real, specific opportunities. For each, return a JSON array with these fields:
+- title: event or publication name
+- type: event type
+- industry: primary industry
+- timeline: when it occurs or deadline
+- location: city/state or virtual
+- audience: who attends
+- excerpt: 2-sentence description of why this fits Jim
+- contact: how to reach organizers if known
+- url: website if known
+- why_fit: specific reason this is a strong match
+
+Return ONLY valid JSON array, no other text.`
+        : `You are a research assistant finding article submission opportunities for James Dillingham, founder of Shiftwork Solutions. He is an expert in shift work scheduling, workforce management, part-time labor, and AI in operations.
+
+He wants to submit guest articles to trade publications. Criteria:
+- Online or print trade publications
+- Article length: 500–1500 words
+- Topics: shift work, operations management, workforce scheduling, AI in manufacturing/logistics, part-time labor strategies, employee surveys
+- Must accept guest submissions or contributed articles
+- Industries: manufacturing, food & beverage, logistics, distribution, HR/operations
+
+Find 5 real, specific publications. For each, return a JSON array:
+- title: publication name
+- type: online/print/both
+- industry: primary audience
+- timeline: submission deadlines or frequency
+- word_count: accepted word range
+- excerpt: why this is a good fit for Jim
+- contact: editor contact or submission portal
+- url: website
+- why_fit: specific match reason
+
+Return ONLY valid JSON array, no other text.`;
+
+      const userMessage = isSpeaking
+        ? `Find speaking opportunities matching these criteria. Today is May 12, 2026. Additional focus: ${query || 'general search across all relevant industries'}`
+        : `Find article submission opportunities. Additional focus: ${query || 'general search across operations, workforce management, shift scheduling'}`;
+
+      try {
+        const raw = await callClaude(systemPrompt, userMessage);
+        const cleaned = raw.replace(/```json|```/g, '').trim();
+        const results = JSON.parse(cleaned);
+        renderResults(results, type, resultsEl);
+      } catch (err) {
+        resultsEl.innerHTML = `<div class="empty-state"><div class="empty-text" style="color:#c0392b">Error: ${err.message}</div></div>`;
+      } finally {
+        loadingEl.classList.remove('visible');
+        btnEl.disabled = false;
+      }
+    }
+
+    // ---- RENDER RESULTS ----
+    function renderResults(results, type, container) {
+      if (!results.length) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No results found. Try adjusting your search.</div></div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="results-header"><div class="results-count">${results.length} opportunities found</div></div>`;
+
+      results.forEach((r, i) => {
+        const isSpeaking = type === 'speaking';
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div>
+              <div class="card-title">${r.title}</div>
+              <div class="card-meta">
+                <span class="badge badge-industry">${isSpeaking ? r.industry : r.industry}</span>
+                <span class="badge badge-timeline">${isSpeaking ? r.timeline : r.timeline}</span>
+                <span class="badge badge-type">${isSpeaking ? r.type : r.type}</span>
+                ${isSpeaking ? `<span class="badge badge-type">${r.location}</span>` : `<span class="badge badge-type">${r.word_count}</span>`}
+              </div>
+              <div class="card-excerpt">${r.excerpt}</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-detail" onclick="toggleDetail(${i}, ${JSON.stringify(r).replace(/"/g, '&quot;')}, '${type}')">Tell Me More</button>
+            ${r.url ? `<button class="btn-detail" style="border-color:var(--accent2);color:var(--accent2)" onclick="window.open('${r.url}','_blank')">Visit Site</button>` : ''}
+            <button class="btn-dismiss" onclick="this.closest('.result-card').remove()">Dismiss</button>
+          </div>
+          <div class="detail-panel" id="detail-${i}"></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ---- DETAIL EXPANSION ----
+    async function toggleDetail(idx, result, type) {
+      const panel = document.getElementById('detail-' + idx);
+      if (panel.classList.contains('visible')) {
+        panel.classList.remove('visible');
+        return;
+      }
+
+      panel.classList.add('visible');
+      panel.innerHTML = '<div class="loading-text" style="font-family:DM Mono;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;animation:blink 1.2s infinite">Researching...</div>';
+
+      const systemPrompt = `You are a research assistant helping James Dillingham evaluate a specific ${type === 'speaking' ? 'speaking engagement' : 'publication'} opportunity. 
+      
+Jim is the founder of Shiftwork Solutions with 35 years of experience in shift work, workforce management, and AI in operations. He has references for past speaking engagements.
+
+Provide a detailed briefing on this opportunity. Include:
+1. What this event/publication actually is
+2. Who specifically attends and what they care about
+3. Exactly how Jim should position himself and his expertise for this audience
+4. Specific talking points or article angles that would resonate
+5. How to make contact and what to say
+6. Any red flags or things to watch out for
+
+Format your response in clear sections with headers. Be specific and actionable.`;
+
+      const userMessage = `Give me a detailed briefing on this opportunity: ${JSON.stringify(result)}`;
+
+      try {
+        const detail = await callClaude(systemPrompt, userMessage);
+        panel.innerHTML = detail.replace(/\n\n/g, '<br><br>').replace(/## (.+)/g, '<h4>$1</h4>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      } catch (err) {
+        panel.innerHTML = `<span style="color:#c0392b">Could not load details: ${err.message}</span>`;
+      }
+    }
+
+    // ---- IDEATION ----
+    let chatHistory = [];
+
+    async function runIdeation() {
+      if (!API_KEY) { checkApiKey(); return; }
+
+      const input = document.getElementById('ideation-input');
+      const btn = document.getElementById('ideation-btn');
+      const history = document.getElementById('chat-history');
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Clear empty state
+      const emptyState = history.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
+
+      // Add user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg';
+      userMsg.innerHTML = `<div class="chat-msg-label you">You</div><div class="chat-msg-body you">${message}</div>`;
+      history.appendChild(userMsg);
+
+      input.value = '';
+      btn.disabled = true;
+
+      // Add thinking indicator
+      const thinkingMsg = document.createElement('div');
+      thinkingMsg.className = 'chat-msg';
+      thinkingMsg.innerHTML = `<div class="chat-msg-label ai">Claude</div><div class="chat-msg-body loading-text" style="font-family:DM Mono;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;animation:blink 1.2s infinite">Thinking...</div>`;
+      history.appendChild(thinkingMsg);
+      history.scrollTop = history.scrollHeight;
+
+      chatHistory.push({ role: 'user', content: message });
+
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-calls': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 2000,
+            system: `You are a strategic marketing advisor for Shiftwork Solutions, a consulting firm founded by James Dillingham with 35 years of experience in shift work scheduling, workforce management, part-time labor optimization, and AI integration in operations.
+
+Key products:
+- Core consulting: shift work scheduling and workforce optimization
+- Temporary Labor Tracker: app for managing part-time workers (in development)
+- Survey in a Box: self-service employee survey platform for 24/7 shift operations
+
+Target market: companies with blue collar workers — food & beverage, manufacturing, logistics, distribution, automotive, pharmaceutical, semiconductor. Company size: 50–5,000 employees. Decision makers: HR managers, operations managers, plant managers, general managers, continuous improvement managers.
+
+Jim is an engaging speaker with references. He's building visibility through speaking engagements and article submissions. He wants to use AI for marketing footwork.
+
+Give specific, actionable marketing ideas. Be direct and creative.`,
+            messages: chatHistory
+          })
+        });
+
+        const data = await response.json();
+        const reply = data.content[0].text;
+        chatHistory.push({ role: 'assistant', content: reply });
+
+        thinkingMsg.querySelector('.chat-msg-body').className = 'chat-msg-body';
+        thinkingMsg.querySelector('.chat-msg-body').innerHTML = reply.replace(/\n\n/g, '<br><br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      } catch (err) {
+        thinkingMsg.querySelector('.chat-msg-body').innerHTML = `<span style="color:#c0392b">Error: ${err.message}</span>`;
+      } finally {
+        btn.disabled = false;
+        history.scrollTop = history.scrollHeight;
+      }
+    }
+
+    // Enter key for ideation
+    document.getElementById('ideation-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runIdeation(); }
+    });
+
+    // Enter key for search inputs
+    document.getElementById('speaking-query').addEventListener('keydown', e => {
+      if (e.key === 'Enter') runSearch('speaking');
+    });
+    document.getElementById('writing-query').addEventListener('keydown', e => {
+      if (e.key === 'Enter') runSearch('writing');
+    });
+  </script>
+</body>
+</html>
