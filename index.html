@@ -588,35 +588,7 @@
     document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
     // ---- API KEY ----
-    let API_KEY = localStorage.getItem('anthropic_key') || '';
-
-    function checkApiKey() {
-      if (!API_KEY) {
-        document.getElementById('api-warning').classList.add('visible');
-        document.getElementById('api-key-input').focus();
-      }
-    }
-
-    function saveApiKey() {
-      const val = document.getElementById('api-key-input').value.trim();
-      if (val.length > 10) {
-        API_KEY = val;
-        localStorage.setItem('anthropic_key', val);
-        document.getElementById('api-warning').classList.remove('visible');
-        alert('API key saved. You\'re ready to search.');
-      } else {
-        alert('Please enter your Anthropic API key.');
-      }
-    }
-
-    function resetApiKey() {
-      localStorage.removeItem('anthropic_key');
-      API_KEY = '';
-      document.getElementById('api-key-input').value = '';
-      checkApiKey();
-    }
-
-    checkApiKey();
+    // API key is managed server-side via environment variable
 
     // ---- TABS ----
     function switchTab(name) {
@@ -658,7 +630,6 @@
 
     // ---- SEARCH ----
     async function runSearch(type) {
-      if (!API_KEY) { checkApiKey(); return; }
 
       const isSpeaking = type === 'speaking';
       const queryEl = document.getElementById(type + '-query');
